@@ -208,14 +208,14 @@ function App() {
       </div>
 
       <div className="relative z-10 flex flex-col min-h-screen">
-        <header className="px-8 pt-8 pb-4">
-          <div className="rounded-3xl border border-white/10 bg-white/10 backdrop-blur-xl shadow-2xl shadow-black/40 px-6 py-5 flex flex-wrap items-center justify-between gap-6">
+        <header className="px-6 pt-8 pb-4 sm:px-8">
+          <div className="rounded-3xl border border-white/10 bg-white/10 backdrop-blur-xl shadow-2xl shadow-black/40 px-6 py-6 flex flex-wrap items-center justify-between gap-6">
             <div className="flex items-start gap-4">
               <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 via-blue-500 to-violet-500 text-white shadow-lg">
                 <Sparkles className="w-6 h-6" />
               </span>
               <div>
-                <h1 className="text-2xl font-semibold tracking-tight">Smart Excel Visualizer</h1>
+                <h1 className="text-2xl font-semibold tracking-tight">Vexcel</h1>
                 <p className="text-sm text-slate-300 mt-1">
                   {currentSheet.name} · {currentSheet.quality.totalRows.toLocaleString()} rows analyzed
                 </p>
@@ -225,38 +225,38 @@ function App() {
             <div className="flex items-center gap-3">
               <button
                 onClick={handleExportImage}
-                className="flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500 to-violet-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-sky-900/30 transition-transform hover:-translate-y-0.5"
+                className="group flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500 to-violet-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-sky-900/30 transition-all hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
               >
-                <Download className="w-4 h-4" />
+                <Download className="w-4 h-4 transition-transform group-hover:-translate-y-0.5 group-hover:scale-105" />
                 Export Insights
               </button>
               <button
                 onClick={handleReset}
-                className="flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-semibold text-slate-200 transition-all hover:bg-white/10 hover:text-white"
+                className="group flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-semibold text-slate-200 transition-all hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
-                <UploadCloud className="w-4 h-4" />
+                <UploadCloud className="w-4 h-4 transition-transform group-hover:translate-y-0.5" />
                 Load Another File
               </button>
             </div>
           </div>
         </header>
 
-        <section className="px-8 pb-6">
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <section className="px-6 pb-8 sm:px-8">
+          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
             {quickStats.map((stat) => (
               <div
                 key={stat.id}
-                className="rounded-2xl border border-white/10 bg-white/10 p-4 shadow-inner shadow-black/40 backdrop-blur"
+                className="flex h-full min-h-[170px] flex-col justify-between rounded-3xl border border-white/10 bg-white/10 p-6 shadow-inner shadow-black/40 backdrop-blur transition-transform duration-300 hover:-translate-y-1"
               >
                 <div className="flex items-center gap-4">
                   <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${stat.tone}`}>
                     <stat.Icon className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-xs uppercase tracking-widest text-slate-300">
+                    <p className="text-[11px] uppercase tracking-[0.35em] text-slate-400">
                       {stat.label}
                     </p>
-                    <p className="text-xl font-semibold text-white">
+                    <p className="text-2xl font-semibold text-white">
                       {stat.value}
                     </p>
                     <p className="text-xs text-slate-400">{stat.note}</p>
@@ -267,14 +267,16 @@ function App() {
           </div>
         </section>
 
-        <div className="flex-1 flex flex-col px-6 pb-8">
+        <div className="flex-1 flex flex-col px-4 pb-8 sm:px-6">
           <div className="flex-1 flex gap-6 overflow-hidden">
-            <div className="w-[19rem] flex-shrink-0">
-              <DataPanel
-                columns={currentSheet.columns}
-                quality={currentSheet.quality}
-                sheetName={currentSheet.name}
-              />
+            <div className="hidden lg:block lg:w-[20rem] lg:flex-shrink-0">
+              <div className="sticky top-8">
+                <DataPanel
+                  columns={currentSheet.columns}
+                  quality={currentSheet.quality}
+                  sheetName={currentSheet.name}
+                />
+              </div>
             </div>
 
             <div className="flex-1 overflow-hidden">
@@ -288,7 +290,7 @@ function App() {
             </div>
 
             {selectedChart && (
-              <div className="w-[21rem] flex-shrink-0">
+              <div className="hidden xl:block xl:w-[21rem] xl:flex-shrink-0">
                 <Inspector
                   chart={selectedChartConfig}
                   columns={currentSheet.columns}
@@ -297,6 +299,14 @@ function App() {
                 />
               </div>
             )}
+          </div>
+
+          <div className="mt-6 lg:hidden">
+            <DataPanel
+              columns={currentSheet.columns}
+              quality={currentSheet.quality}
+              sheetName={currentSheet.name}
+            />
           </div>
         </div>
       </div>

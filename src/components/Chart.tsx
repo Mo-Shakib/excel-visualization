@@ -56,6 +56,15 @@ const tooltipItemStyle = {
   color: '#e2e8f0',
 };
 
+const GRID_STROKE = 'rgba(148, 163, 184, 0.25)';
+const GRID_DASH = '4 6';
+const AXIS_STROKE = '#94a3b8';
+const TICK_STYLE = { fill: '#94a3b8', fontSize: 12 };
+const legendProps = {
+  wrapperStyle: { color: '#cbd5f5', fontSize: 12 },
+  iconType: 'circle' as const,
+};
+
 function processChartData(data: any[], config: ChartConfig) {
   let processedData = [...data];
 
@@ -171,21 +180,22 @@ export function Chart({ config, data, onDataClick }: ChartProps) {
       case '100-stacked-bar':
         return (
           <BarChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-            <XAxis dataKey={config.xAxis} stroke="#6b7280" />
-            <YAxis stroke="#6b7280" />
+            <CartesianGrid stroke={GRID_STROKE} strokeDasharray={GRID_DASH} />
+            <XAxis dataKey={config.xAxis} stroke={AXIS_STROKE} tick={TICK_STYLE} axisLine={false} />
+            <YAxis stroke={AXIS_STROKE} tick={TICK_STYLE} axisLine={false} />
             <Tooltip
               contentStyle={tooltipContentStyle}
               labelStyle={tooltipLabelStyle}
               itemStyle={tooltipItemStyle}
             />
-            <Legend />
+            <Legend {...legendProps} />
             {yAxisFields.map((field, index) => (
               <Bar
                 key={field}
                 dataKey={field}
                 fill={COLORS[index % COLORS.length]}
                 stackId={config.stacked ? 'stack' : undefined}
+                radius={[12, 12, 4, 4]}
                 onClick={onDataClick}
               />
             ))}
@@ -195,15 +205,15 @@ export function Chart({ config, data, onDataClick }: ChartProps) {
       case 'line':
         return (
           <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-            <XAxis dataKey={config.xAxis} stroke="#6b7280" />
-            <YAxis stroke="#6b7280" />
+            <CartesianGrid stroke={GRID_STROKE} strokeDasharray={GRID_DASH} />
+            <XAxis dataKey={config.xAxis} stroke={AXIS_STROKE} tick={TICK_STYLE} axisLine={false} />
+            <YAxis stroke={AXIS_STROKE} tick={TICK_STYLE} axisLine={false} />
             <Tooltip
               contentStyle={tooltipContentStyle}
               labelStyle={tooltipLabelStyle}
               itemStyle={tooltipItemStyle}
             />
-            <Legend />
+            <Legend {...legendProps} />
             {yAxisFields.map((field, index) => (
               <Line
                 key={field}
@@ -222,15 +232,15 @@ export function Chart({ config, data, onDataClick }: ChartProps) {
       case '100-stacked-area':
         return (
           <AreaChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-            <XAxis dataKey={config.xAxis} stroke="#6b7280" />
-            <YAxis stroke="#6b7280" />
+            <CartesianGrid stroke={GRID_STROKE} strokeDasharray={GRID_DASH} />
+            <XAxis dataKey={config.xAxis} stroke={AXIS_STROKE} tick={TICK_STYLE} axisLine={false} />
+            <YAxis stroke={AXIS_STROKE} tick={TICK_STYLE} axisLine={false} />
             <Tooltip
               contentStyle={tooltipContentStyle}
               labelStyle={tooltipLabelStyle}
               itemStyle={tooltipItemStyle}
             />
-            <Legend />
+            <Legend {...legendProps} />
             {yAxisFields.map((field, index) => (
               <Area
                 key={field}
@@ -247,15 +257,15 @@ export function Chart({ config, data, onDataClick }: ChartProps) {
       case 'scatter':
         return (
           <ScatterChart>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-            <XAxis dataKey={config.xAxis} stroke="#6b7280" />
-            <YAxis dataKey={yAxisFields[0]} stroke="#6b7280" />
+            <CartesianGrid stroke={GRID_STROKE} strokeDasharray={GRID_DASH} />
+            <XAxis dataKey={config.xAxis} stroke={AXIS_STROKE} tick={TICK_STYLE} axisLine={false} />
+            <YAxis dataKey={yAxisFields[0]} stroke={AXIS_STROKE} tick={TICK_STYLE} axisLine={false} />
             <Tooltip
               contentStyle={tooltipContentStyle}
               labelStyle={tooltipLabelStyle}
               itemStyle={tooltipItemStyle}
             />
-            <Legend />
+            <Legend {...legendProps} />
             <Scatter
               name={`${config.xAxis} vs ${yAxisFields[0]}`}
               data={chartData}
@@ -330,15 +340,15 @@ export function Chart({ config, data, onDataClick }: ChartProps) {
 
         return (
           <BarChart data={bins}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-            <XAxis dataKey="range" stroke="#6b7280" />
-            <YAxis stroke="#6b7280" />
+            <CartesianGrid stroke={GRID_STROKE} strokeDasharray={GRID_DASH} />
+            <XAxis dataKey="range" stroke={AXIS_STROKE} tick={TICK_STYLE} axisLine={false} />
+            <YAxis stroke={AXIS_STROKE} tick={TICK_STYLE} axisLine={false} />
             <Tooltip
               contentStyle={tooltipContentStyle}
               labelStyle={tooltipLabelStyle}
               itemStyle={tooltipItemStyle}
             />
-            <Bar dataKey="count" fill={COLORS[0]} />
+            <Bar dataKey="count" fill={COLORS[0]} radius={[10, 10, 4, 4]} />
           </BarChart>
         );
 

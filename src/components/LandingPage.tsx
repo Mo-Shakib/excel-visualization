@@ -49,58 +49,59 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
         <div className="absolute bottom-[-12rem] right-[-10rem] h-[32rem] w-[32rem] rounded-full bg-violet-500/25 blur-3xl" />
       </div>
 
-      <header className="relative z-10 px-6 py-6 sm:px-12 sm:py-10">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 via-blue-500 to-violet-500 text-white shadow-lg shadow-sky-900/50">
-              <span className="absolute inset-0 -z-10 animate-ping rounded-2xl bg-sky-500/40" />
-              <Sparkles className="relative h-6 w-6" />
+      <header className="relative z-10 px-5 py-6 sm:px-12 sm:py-10">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-4 sm:gap-3">
+            <span className="relative flex h-14 w-14 items-center justify-center rounded-[1.5rem] bg-gradient-to-br from-sky-500 via-blue-500 to-violet-500 text-white shadow-lg shadow-sky-900/50 sm:h-12 sm:w-12">
+              <span className="absolute inset-0 -z-10 animate-ping rounded-[1.5rem] bg-sky-500/30 sm:rounded-2xl" />
+              <Sparkles className="relative h-6 w-6 sm:h-5 sm:w-5" />
             </span>
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.4em] text-slate-400">
+            <div className="space-y-1">
+              <p className="text-xs font-semibold uppercase tracking-[0.4em] text-slate-400 sm:text-sm">
                 Smart Excel Visualizer
               </p>
-              <h1 className="flex items-center gap-3 text-2xl font-semibold text-white sm:text-3xl">
-                From spreadsheet to story in one click
+              <h1 className="flex items-center gap-2 text-xl font-semibold text-white sm:text-3xl">
+                Vexcel
                 <Stars className="hidden h-5 w-5 text-amber-200 sm:block" />
               </h1>
             </div>
           </div>
-          <span className="hidden text-xs font-medium uppercase tracking-[0.35em] text-slate-400 md:inline">
-            Free tier · No credit card
-          </span>
+          <div className="flex items-center justify-between gap-3 sm:justify-end">
+            <span className="hidden text-xs font-medium uppercase tracking-[0.35em] text-slate-400 md:inline">
+              Free tier · No credit card
+            </span>
+          </div>
         </div>
       </header>
 
       <main className="relative z-10 flex-1">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-16 px-6 pb-20 pt-12 sm:px-12 sm:pt-16 lg:gap-20">
-          <section className="grid items-center gap-16 md:grid-cols-[minmax(0,0.95fr),minmax(0,1fr)]">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-16 px-5 pb-20 pt-10 sm:px-12 sm:pt-16 lg:gap-20">
+          <section className="grid gap-12 md:grid-cols-[minmax(0,0.95fr),minmax(0,1fr)] md:items-center">
             <div className="space-y-8 lg:pr-10">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm font-medium text-slate-200 shadow-lg shadow-black/40 backdrop-blur">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-medium text-slate-200 shadow-lg shadow-black/40 backdrop-blur sm:px-5 sm:py-2 sm:text-sm">
                 Ready in minutes
               </div>
-              <div className="space-y-6">
-                <h2 className="text-[2.8rem] font-semibold leading-[1.1] text-white sm:text-[3.2rem] md:text-[3.6rem]">
-                  Turn raw Excel data into an interactive analytics hub.
+              <div className="space-y-5 sm:space-y-6">
+                <h2 className="text-[2.25rem] font-semibold leading-[1.08] text-white sm:text-[3.2rem] md:text-[3.4rem]">
+                  The Easiest Way to Visualize Your Excel Data.
                 </h2>
-                <p className="text-base leading-relaxed text-slate-300 sm:text-lg">
-                  Drop any Excel or CSV file to unlock AI-assisted profiles, smart chart suggestions,
-                  and polished dashboards. Built for analysts, teams, and founders who need clarity now.
+                <p className="max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
+                  Drop any Excel or CSV file to unlock AI-assisted profiles, smart chart suggestions, and polished dashboards. Designed for fast-moving teams who need answers now—not after weeks of setup.
                 </p>
-                <p className="text-sm uppercase tracking-[0.4em] text-slate-500">
-                  No login · Unlimited uploads · Free while in early access
+                <p className="text-xs uppercase tracking-[0.35em] text-slate-500 sm:text-sm">
+                  Instant Access • Free to Use
                 </p>
               </div>
               <button
                 onClick={onGetStarted}
-                className="group inline-flex items-center justify-center gap-3 rounded-full bg-gradient-to-r from-sky-500 via-blue-500 to-violet-500 px-9 py-3.5 text-base font-semibold text-white shadow-[0_18px_40px_-18px_rgba(59,130,246,0.75)] transition-all hover:-translate-y-1 hover:shadow-[0_28px_60px_-20px_rgba(59,130,246,0.9)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
+                className="group inline-flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-r from-sky-500 via-blue-500 to-violet-500 px-7 py-3 text-sm font-semibold text-white shadow-[0_18px_40px_-18px_rgba(59,130,246,0.75)] transition-all hover:-translate-y-1 hover:shadow-[0_28px_60px_-20px_rgba(59,130,246,0.9)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400 sm:w-auto sm:px-9 sm:py-3.5 sm:text-base"
               >
-                Try Today for Free
+                Upload File & See Magic
                 <MoveRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </button>
             </div>
 
-            <div className="relative overflow-hidden rounded-[2.5rem] md:rounded-[3rem] border border-white/10 bg-white/10 p-8 shadow-2xl shadow-black/50 backdrop-blur sm:p-9 md:mt-0 mt-10 xl:p-10">
+            <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/10 p-7 shadow-2xl shadow-black/50 backdrop-blur sm:p-9 md:rounded-[3rem] md:p-8 md:mt-0">
               <div className="absolute -top-16 right-[-10rem] h-72 w-72 rounded-full bg-sky-500/25 blur-3xl" />
               <div className="absolute bottom-[-10rem] left-[-8rem] h-72 w-72 rounded-full bg-violet-500/25 blur-3xl" />
               <div className="relative grid gap-5">
