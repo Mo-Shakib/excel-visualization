@@ -1,5 +1,5 @@
 import { ColumnMetadata, DataQuality } from '../types/data';
-import { Database, Hash, Type, Calendar, Tag, AlertCircle } from 'lucide-react';
+import { Database, Hash, Type, Calendar, Tag, AlertCircle, Gauge } from 'lucide-react';
 
 interface DataPanelProps {
   columns: ColumnMetadata[];
@@ -38,7 +38,10 @@ export function DataPanel({ columns, quality, sheetName }: DataPanelProps) {
 
         <div className="grid grid-cols-2 gap-3">
           <div className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-inner shadow-black/30">
-            <p className="text-[10px] uppercase tracking-[0.35em] text-slate-400">Duplicates</p>
+            <p className="flex items-center gap-2 text-[10px] uppercase tracking-[0.35em] text-slate-400">
+              <Gauge className="h-3.5 w-3.5 text-slate-300" />
+              Duplicates
+            </p>
             <p className="mt-1 text-lg font-semibold text-white">
               {quality.duplicateRows.toLocaleString()}
             </p>

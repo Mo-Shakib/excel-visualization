@@ -1,12 +1,13 @@
 import { useCallback } from 'react';
-import { Upload } from 'lucide-react';
+import { ArrowLeft, Sparkles, UploadCloud } from 'lucide-react';
 
 interface UploadZoneProps {
   onFileSelect: (file: File) => void;
   isProcessing: boolean;
+  onBack?: () => void;
 }
 
-export function UploadZone({ onFileSelect, isProcessing }: UploadZoneProps) {
+export function UploadZone({ onFileSelect, isProcessing, onBack }: UploadZoneProps) {
   const handleDrop = useCallback(
     (e: React.DragEvent<HTMLDivElement>) => {
       e.preventDefault();
@@ -36,6 +37,8 @@ export function UploadZone({ onFileSelect, isProcessing }: UploadZoneProps) {
     return validExtensions.some(ext => fileName.endsWith(ext));
   };
 
+  const backDisabled = !onBack || isProcessing;
+
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-950 text-slate-100">
       <div className="absolute inset-0 pointer-events-none">
@@ -44,8 +47,23 @@ export function UploadZone({ onFileSelect, isProcessing }: UploadZoneProps) {
         <div className="absolute -right-32 bottom-0 h-[28rem] w-[28rem] rounded-full bg-violet-500/25 blur-3xl" />
       </div>
 
-      <div className="relative z-10 w-full max-w-3xl px-6 py-12">
-        <div className="rounded-3xl border border-white/10 bg-white/10 p-10 text-center shadow-2xl shadow-black/40 backdrop-blur">
+      <div className="relative z-10 w-full max-w-3xl px-5 py-16 sm:px-6 sm:py-20">
+        <div className="flex justify-between pb-6 text-sm font-medium text-slate-300">
+          <button
+            type="button"
+            onClick={backDisabled ? undefined : onBack}
+            disabled={backDisabled}
+            className={`inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.3em] transition-colors ${backDisabled ? 'pointer-events-none opacity-50' : 'hover:bg-white/10'}`}
+          >
+            <ArrowLeft className="h-3 w-3" />
+            Back
+          </button>
+          <span className="hidden text-xs uppercase tracking-[0.3em] text-slate-400 sm:inline">
+            Drop files · No limits
+          </span>
+        </div>
+
+        <div className="rounded-3xl border border-white/10 bg-white/10 p-8 text-center shadow-2xl shadow-black/40 backdrop-blur sm:p-10">
           <h1 className="text-4xl font-semibold tracking-tight text-white">
             Smart Excel Visualizer
           </h1>
@@ -56,17 +74,17 @@ export function UploadZone({ onFileSelect, isProcessing }: UploadZoneProps) {
           <div
             onDrop={handleDrop}
             onDragOver={(e) => e.preventDefault()}
-            className="mt-10 flex flex-col items-center rounded-3xl border border-dashed border-white/20 bg-white/5 p-12 transition-all hover:border-sky-400/50 hover:bg-sky-500/10"
+            className="mt-10 flex flex-col items-center rounded-3xl border border-dashed border-white/20 bg-white/5 p-10 transition-all hover:border-sky-400/50 hover:bg-sky-500/10 sm:p-12"
           >
             <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 via-blue-500 to-violet-500 text-white shadow-lg">
-              <Upload className="h-8 w-8" />
+              <UploadCloud className="h-8 w-8" />
             </span>
             <p className="mt-6 text-xl font-semibold text-white">
               Drop your Excel file here
             </p>
             <p className="mt-2 text-sm text-slate-300">or choose a file from your device</p>
 
-            <label className="mt-6 inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white transition-all hover:border-sky-400/50 hover:bg-sky-500/20 cursor-pointer">
+            <label className="mt-6 inline-flex items-center gap-3 cursor-pointer rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white transition-all hover:border-sky-400/50 hover:bg-sky-500/20">
               <input
                 type="file"
                 accept=".xlsx,.xls,.csv"
@@ -74,6 +92,7 @@ export function UploadZone({ onFileSelect, isProcessing }: UploadZoneProps) {
                 disabled={isProcessing}
                 className="hidden"
               />
+              <Sparkles className="h-4 w-4" />
               {isProcessing ? 'Processing...' : 'Select File'}
             </label>
 

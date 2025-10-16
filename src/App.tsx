@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { UploadZone } from './components/UploadZone';
 import { DataPanel } from './components/DataPanel';
 import { ChartGrid } from './components/ChartGrid';
@@ -6,7 +6,18 @@ import { Inspector } from './components/Inspector';
 import { parseExcelFile } from './utils/excelParser';
 import { generateChartRecommendations } from './utils/chartRecommendations';
 import { ParsedSheet, ChartConfig, ChartRecommendation } from './types/data';
-import { Download, Sparkles, LineChart, Layers, AlertTriangle } from 'lucide-react';
+import { Download, Sparkles, LineChart, Layers, AlertTriangle, UploadCloud } from 'lucide-react';
+import { LandingPage } from './components/LandingPage';
+import { LoadingOverlay } from './components/LoadingOverlay';
+
+type AppView = 'landing' | 'upload' | 'dashboard';
+
+const LOADING_MESSAGES = [
+  'Profiling columns and data quality...',
+  'Scouting for chart-worthy relationships...',
+  'Composing narrative-ready insights...',
+  'Polishing your dashboard experience...',
+];
 
 function App() {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -14,6 +25,21 @@ function App() {
   const [charts, setCharts] = useState<ChartConfig[]>([]);
   const [selectedChart, setSelectedChart] = useState<string | null>(null);
   const [insights, setInsights] = useState<Record<string, string[]>>({});
+  const [view, setView] = useState<AppView>('landing');
+  const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
+
+  useEffect(() => {
+    if (!isProcessing) {
+      return;
+    }
+
+    setLoadingMessageIndex(0);
+    const interval = window.setInterval(() => {
+      setLoadingMessageIndex((previous) => (previous + 1) % LOADING_MESSAGES.length);
+    }, 2200);
+
+    return () => window.clearInterval(interval);
+  }, [isProcessing]);
 
   const handleFileSelect = async (file: File) => {
     setIsProcessing(true);
@@ -36,6 +62,7 @@ function App() {
         }
       });
       setInsights(newInsights);
+      setView('dashboard');
     } catch (error) {
       console.error('Error processing file:', error);
       alert('Failed to process file. Please ensure it is a valid Excel file.');
@@ -92,10 +119,37 @@ function App() {
     setCharts([]);
     setSelectedChart(null);
     setInsights({});
+    setView('upload');
   };
 
+  if (view === 'landing') {
+    return (
+      <>
+        <LandingPage onGetStarted={() => setView('upload')} />
+        {isProcessing && (
+          <LoadingOverlay message={LOADING_MESSAGES[loadingMessageIndex]} />
+        )}
+      </>
+    );
+  }
+
+  if (view === 'upload') {
+    return (
+      <>
+        <UploadZone
+          onFileSelect={handleFileSelect}
+          isProcessing={isProcessing}
+          onBack={() => setView('landing')}
+        />
+        {isProcessing && (
+          <LoadingOverlay message={LOADING_MESSAGES[loadingMessageIndex]} />
+        )}
+      </>
+    );
+  }
+
   if (!currentSheet) {
-    return <UploadZone onFileSelect={handleFileSelect} isProcessing={isProcessing} />;
+    return null;
   }
 
   const selectedChartConfig = charts.find((c) => c.id === selectedChart) || null;
@@ -172,8 +226,9 @@ function App() {
               </button>
               <button
                 onClick={handleReset}
-                className="rounded-full border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-semibold text-slate-200 transition-all hover:bg-white/10 hover:text-white"
+                className="flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-semibold text-slate-200 transition-all hover:bg-white/10 hover:text-white"
               >
+                <UploadCloud className="w-4 h-4" />
                 Load Another File
               </button>
             </div>
@@ -239,6 +294,9 @@ function App() {
           </div>
         </div>
       </div>
+      {isProcessing && (
+        <LoadingOverlay message={LOADING_MESSAGES[loadingMessageIndex]} />
+      )}
     </div>
   );
 }
