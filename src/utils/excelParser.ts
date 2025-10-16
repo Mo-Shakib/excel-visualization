@@ -1,6 +1,23 @@
 import * as XLSX from 'xlsx';
 import { DataType, ColumnMetadata, DataQuality, ParsedSheet, ParsedWorkbook } from '../types/data';
 
+function isEmptyCell(value: unknown): boolean {
+  return value === null || value === undefined || (typeof value === 'string' && value.trim() === '');
+}
+
+function isNumericCell(value: unknown): boolean {
+  if (value === null || value === undefined) return false;
+  if (typeof value === 'number') return !isNaN(value);
+
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (trimmed === '') return false;
+    return !isNaN(Number(trimmed));
+  }
+
+  return false;
+}
+
 function inferDataType(values: any[]): DataType {
   const nonNullValues = values.filter(v => v !== null && v !== undefined && v !== '');
 
@@ -150,6 +167,138 @@ function analyzeDataQuality(data: any[], columns: ColumnMetadata[]): DataQuality
   };
 }
 
+function detectHeaderRow(rows: any[][]): number {
+  const stats = rows.map((row, index) => {
+    const normalized = row.map(cell => {
+      if (cell === null || cell === undefined) return '';
+      return String(cell).trim();
+    });
+
+    const nonEmptyValues = normalized.filter(value => value !== '');
+    const nonEmptyCount = nonEmptyValues.length;
+    const numericCount = row.filter(value => isNumericCell(value)).length;
+    const textCount = nonEmptyValues.length - numericCount;
+    const uniqueCount = new Set(nonEmptyValues.map(value => value.toLowerCase())).size;
+
+    return {
+      index,
+      nonEmptyCount,
+      numericCount,
+      textCount,
+      uniqueCount,
+      normalized,
+    };
+  }).filter(stat => stat.nonEmptyCount > 0);
+
+  if (stats.length === 0) {
+    return 0;
+  }
+
+  const maxNonEmpty = Math.max(...stats.map(stat => stat.nonEmptyCount));
+  const completenessThreshold = Math.max(1, Math.floor(maxNonEmpty * 0.6));
+
+  let bestIndex = stats[0].index;
+  let bestScore = -Infinity;
+
+  stats.forEach((stat, idx) => {
+    const textRatio = stat.nonEmptyCount > 0 ? stat.textCount / stat.nonEmptyCount : 0;
+    const numericRatio = stat.nonEmptyCount > 0 ? stat.numericCount / stat.nonEmptyCount : 0;
+    const uniquenessRatio = stat.nonEmptyCount > 0 ? stat.uniqueCount / stat.nonEmptyCount : 0;
+
+    let score = 0;
+    score += (stat.nonEmptyCount / maxNonEmpty) * 6;
+    score += Math.min(textRatio, 0.9) * 3;
+    if (numericRatio > 0.5) {
+      score -= (numericRatio - 0.5) * 4;
+    }
+    score += uniquenessRatio * 2;
+    if (stat.nonEmptyCount >= completenessThreshold) {
+      score += 2;
+    }
+
+    const nextStat = stats[idx + 1];
+    if (nextStat) {
+      const nextNumericRatio = nextStat.nonEmptyCount > 0 ? nextStat.numericCount / nextStat.nonEmptyCount : 0;
+      const nextTextRatio = nextStat.nonEmptyCount > 0 ? nextStat.textCount / nextStat.nonEmptyCount : 0;
+
+      if (nextNumericRatio > numericRatio) {
+        score += 1;
+      }
+
+      if (nextTextRatio < textRatio) {
+        score += 0.5;
+      }
+    }
+
+    score -= stat.index * 0.1;
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestIndex = stat.index;
+    }
+  });
+
+  return bestIndex;
+}
+
+function buildColumnNames(rows: any[][], headerIndex: number): string[] {
+  const headerRow = rows[headerIndex] ?? [];
+  const previousRow = headerIndex > 0 ? rows[headerIndex - 1] ?? [] : [];
+
+  const dataRows = rows.slice(headerIndex + 1);
+  const maxColumns = Math.max(
+    headerRow.length,
+    previousRow.length,
+    ...dataRows.map(row => row.length),
+  );
+
+  const seen = new Map<string, number>();
+  const columnNames: string[] = [];
+
+  for (let i = 0; i < maxColumns; i++) {
+    const primaryValue = headerRow[i];
+    const secondaryValue = previousRow[i];
+
+    let name = '';
+
+    if (!isEmptyCell(primaryValue)) {
+      name = String(primaryValue).trim();
+    } else if (!isEmptyCell(secondaryValue)) {
+      name = String(secondaryValue).trim();
+    } else {
+      name = `Column ${i + 1}`;
+    }
+
+    const baseName = name === '' ? `Column ${i + 1}` : name;
+    const existingCount = seen.get(baseName) ?? 0;
+    seen.set(baseName, existingCount + 1);
+
+    if (existingCount > 0) {
+      columnNames.push(`${baseName} (${existingCount + 1})`);
+    } else {
+      columnNames.push(baseName);
+    }
+  }
+
+  return columnNames;
+}
+
+function rowsToObjects(rows: any[][], startIndex: number, columnNames: string[]): any[] {
+  const dataRows = rows.slice(startIndex + 1);
+
+  return dataRows
+    .filter(row => row.some(cell => !isEmptyCell(cell)))
+    .map(row => {
+      const record: Record<string, any> = {};
+
+      for (let i = 0; i < columnNames.length; i++) {
+        record[columnNames[i]] = i < row.length ? row[i] ?? null : null;
+      }
+
+      return record;
+    });
+}
+
 export function parseExcelFile(file: File): Promise<ParsedWorkbook> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -161,10 +310,31 @@ export function parseExcelFile(file: File): Promise<ParsedWorkbook> {
 
         const sheets: ParsedSheet[] = workbook.SheetNames.map(sheetName => {
           const worksheet = workbook.Sheets[sheetName];
-          const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+          const rowMatrix = XLSX.utils.sheet_to_json<any[]>(worksheet, {
+            header: 1,
             defval: null,
-            raw: false
-          });
+            raw: false,
+            blankrows: false,
+          }) as any[][];
+
+          if (!Array.isArray(rowMatrix) || rowMatrix.length === 0) {
+            return {
+              name: sheetName,
+              data: [],
+              columns: [],
+              quality: {
+                totalRows: 0,
+                totalColumns: 0,
+                missingValuesByColumn: {},
+                duplicateRows: 0,
+                warnings: ['Sheet is empty'],
+              },
+            };
+          }
+
+          const headerIndex = detectHeaderRow(rowMatrix);
+          const columnNames = buildColumnNames(rowMatrix, headerIndex);
+          const jsonData = rowsToObjects(rowMatrix, headerIndex, columnNames);
 
           if (jsonData.length === 0) {
             return {
@@ -181,7 +351,6 @@ export function parseExcelFile(file: File): Promise<ParsedWorkbook> {
             };
           }
 
-          const columnNames = Object.keys(jsonData[0]);
           const columns = columnNames.map(colName => analyzeColumn(jsonData, colName));
           const quality = analyzeDataQuality(jsonData, columns);
 
