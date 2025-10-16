@@ -25,17 +25,22 @@ export function ChartGrid({ charts, data, insights, onEditChart, onRemoveChart }
   }
 
   return (
-    <div className="h-full overflow-y-auto px-2 pb-8 pt-2">
-      <div className="grid gap-6 pb-8 md:grid-cols-2 xl:grid-cols-2">
-        {charts.map((chart) => (
-          <div key={chart.id} className="min-h-[420px]">
-            <ChartCard
-              config={chart}
-              data={data}
-              insights={insights[chart.id]}
-              onEdit={() => onEditChart(chart.id)}
-              onRemove={() => onRemoveChart(chart.id)}
-            />
+    <div className="h-full overflow-y-auto px-1 pb-10 pt-1 sm:px-2">
+      <div className="grid gap-6 pb-10 md:grid-cols-2 xl:grid-cols-2">
+        {charts.map((chart, index) => (
+          <div
+            key={chart.id}
+            className="min-h-[520px]"
+          >
+            <div className={`h-full rounded-[2.25rem] border border-white/10 bg-white/5 p-[1px] ${index % 2 === 1 ? 'bg-gradient-to-br from-sky-500/10 via-transparent to-violet-500/10' : ''}`}>
+              <ChartCard
+                config={chart}
+                data={data}
+                insights={insights[chart.id]}
+                onEdit={() => onEditChart(chart.id)}
+                onRemove={() => onRemoveChart(chart.id)}
+              />
+            </div>
           </div>
         ))}
       </div>

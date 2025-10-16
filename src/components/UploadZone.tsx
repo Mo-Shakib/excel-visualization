@@ -65,7 +65,7 @@ export function UploadZone({ onFileSelect, isProcessing, onBack }: UploadZonePro
 
         <div className="rounded-3xl border border-white/10 bg-white/10 p-8 text-center shadow-2xl shadow-black/40 backdrop-blur sm:p-10">
           <h1 className="text-4xl font-semibold tracking-tight text-white">
-            Smart Excel Visualizer
+            Vexcel
           </h1>
           <p className="mt-3 text-lg text-slate-300">
             Drop your spreadsheet and watch insights come to life instantly.
