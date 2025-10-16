@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel Visualization Demo</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="chart.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Excel Visualization - Demo</h1>
+            <p>This page demonstrates the app with sample data</p>
+        </header>
+
+        <div id="resultsSection">
+            <div class="section">
+                <h2>Data Summary</h2>
+                <div class="data-summary">
+                    <div class="summary-item">
+                        <div class="summary-value">10</div>
+                        <div class="summary-label">Rows</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">5</div>
+                        <div class="summary-label">Columns</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">4</div>
+                        <div class="summary-label">Chart Suggestions</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Column Information</h2>
+                <div class="column-info">
+                    <div class="column-card">
+                        <div class="column-name">Date</div>
+                        <span class="column-type">date</span>
+                        <div class="column-samples">Sample: 2024-01-01, 2024-01-02, 2024-01-03</div>
+                    </div>
+                    <div class="column-card">
+                        <div class="column-name">Product</div>
+                        <span class="column-type">categorical</span>
+                        <div class="column-samples">Sample: Laptop, Phone, Desk</div>
+                    </div>
+                    <div class="column-card">
+                        <div class="column-name">Category</div>
+                        <span class="column-type">categorical</span>
+                        <div class="column-samples">Sample: Electronics, Electronics, Furniture</div>
+                    </div>
+                    <div class="column-card">
+                        <div class="column-name">Sales</div>
+                        <span class="column-type">numeric</span>
+                        <div class="column-samples">Sample: 1200, 800, 450</div>
+                    </div>
+                    <div class="column-card">
+                        <div class="column-name">Quantity</div>
+                        <span class="column-type">numeric</span>
+                        <div class="column-samples">Sample: 5, 8, 3</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Suggested Visualizations</h2>
+                <div class="chart-suggestions">
+                    <div class="suggestion-card">
+                        <div class="suggestion-icon">📈</div>
+                        <div class="suggestion-title">Sales over Date</div>
+                        <div class="suggestion-description">Time series visualization</div>
+                        <div class="suggestion-details">Type: LINE | X: Date | Y: Sales</div>
+                    </div>
+                    <div class="suggestion-card">
+                        <div class="suggestion-icon">📊</div>
+                        <div class="suggestion-title">Sales by Product</div>
+                        <div class="suggestion-description">Categorical comparison</div>
+                        <div class="suggestion-details">Type: BAR | X: Product | Y: Sales</div>
+                    </div>
+                    <div class="suggestion-card">
+                        <div class="suggestion-icon">🥧</div>
+                        <div class="suggestion-title">Distribution of Product</div>
+                        <div class="suggestion-description">Category distribution</div>
+                        <div class="suggestion-details">Type: PIE | Data: Product</div>
+                    </div>
+                    <div class="suggestion-card">
+                        <div class="suggestion-icon">⚫</div>
+                        <div class="suggestion-title">Quantity vs Sales</div>
+                        <div class="suggestion-description">Correlation analysis</div>
+                        <div class="suggestion-details">Type: SCATTER | X: Sales | Y: Quantity</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section chart-section">
+                <div class="chart-header">
+                    <h2>Sales by Product</h2>
+                    <div class="chart-controls">
+                        <select class="chart-select">
+                            <option selected>Bar Chart</option>
+                        </select>
+                        <select class="chart-select">
+                            <option selected>Product</option>
+                        </select>
+                        <select class="chart-select">
+                            <option selected>Sales</option>
+                        </select>
+                        <button class="btn btn-primary">Update Chart</button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="demoChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create demo chart
+        const ctx = document.getElementById('demoChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Laptop', 'Phone', 'Desk', 'Chair', 'Monitor', 'Keyboard', 'Mouse', 'Table', 'Lamp', 'Webcam'],
+                datasets: [{
+                    label: 'Sales',
+                    data: [1200, 800, 450, 200, 600, 150, 80, 500, 75, 120],
+                    backgroundColor: 'rgba(79, 70, 229, 0.8)',
+                    borderColor: 'rgba(79, 70, 229, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Sales by Product'
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Product'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Sales'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
