@@ -1,6 +1,6 @@
 import { ChartConfig } from '../types/data';
 import { Chart } from './Chart';
-import { MoreVertical, Lightbulb } from 'lucide-react';
+import { MoreHorizontal, Wand2 } from 'lucide-react';
 
 interface ChartCardProps {
   config: ChartConfig;
@@ -12,23 +12,29 @@ interface ChartCardProps {
 
 export function ChartCard({ config, data, insights, onEdit, onRemove }: ChartCardProps) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-full">
-      <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50">
-        <h3 className="font-semibold text-gray-900">{config.title}</h3>
+    <div className="flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900/70 via-slate-900/50 to-slate-950/80 shadow-2xl shadow-black/40 backdrop-blur">
+      <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
+        <div>
+          <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
+            {config.title}
+            <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] uppercase tracking-[0.25em] text-slate-300">Live</span>
+          </h3>
+          <p className="text-xs text-slate-400">Auto-generated insight</p>
+        </div>
         <div className="relative group">
-          <button className="p-1 hover:bg-gray-200 rounded transition-colors">
-            <MoreVertical className="w-5 h-5 text-gray-500" />
+          <button className="rounded-full border border-white/10 bg-white/5 p-2 text-slate-200 transition-colors hover:bg-white/10">
+            <MoreHorizontal className="w-4 h-4" />
           </button>
-          <div className="absolute right-0 mt-1 w-40 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+          <div className="invisible absolute right-0 top-11 w-44 rounded-2xl border border-white/10 bg-slate-900/95 p-1 opacity-0 shadow-xl shadow-black/50 backdrop-blur transition-all group-hover:visible group-hover:opacity-100">
             <button
               onClick={onEdit}
-              className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg"
+              className="w-full rounded-xl px-4 py-2 text-left text-sm text-slate-200 hover:bg-white/5"
             >
               Edit Chart
             </button>
             <button
               onClick={onRemove}
-              className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 rounded-b-lg"
+              className="w-full rounded-xl px-4 py-2 text-left text-sm text-rose-200 hover:bg-rose-500/10"
             >
               Remove
             </button>
@@ -36,19 +42,23 @@ export function ChartCard({ config, data, insights, onEdit, onRemove }: ChartCar
         </div>
       </div>
 
-      <div className="flex-1 p-6 min-h-[300px]">
+      <div className="flex-1 p-6">
         <Chart config={config} data={data} />
       </div>
 
       {insights && insights.length > 0 && (
-        <div className="px-6 py-4 bg-blue-50 border-t border-blue-100">
-          <div className="flex items-start gap-2">
-            <Lightbulb className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-            <div className="flex-1">
-              <p className="text-xs font-medium text-blue-900 mb-1">Insights</p>
-              <ul className="text-xs text-blue-700 space-y-0.5">
+        <div className="border-t border-sky-400/20 bg-sky-500/10 px-6 py-4">
+          <div className="flex items-start gap-3">
+            <span className="mt-0.5 flex h-6 w-6 items-center justify-center rounded-lg bg-sky-500/20 text-sky-200">
+              <Wand2 className="w-4 h-4" />
+            </span>
+            <div className="flex-1 space-y-1">
+              <p className="text-xs font-semibold uppercase tracking-wide text-sky-100">Insights</p>
+              <ul className="space-y-1 text-sm text-sky-100">
                 {insights.map((insight, index) => (
-                  <li key={index}>{insight}</li>
+                  <li key={index} className="leading-snug">
+                    {insight}
+                  </li>
                 ))}
               </ul>
             </div>

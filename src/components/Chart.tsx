@@ -36,6 +36,26 @@ const COLORS = [
   '#f97316',
 ];
 
+const tooltipContentStyle = {
+  backgroundColor: 'rgba(15, 23, 42, 0.85)',
+  border: '1px solid rgba(148, 163, 184, 0.4)',
+  borderRadius: '0.75rem',
+  backdropFilter: 'blur(12px)',
+  boxShadow: '0 24px 48px -18px rgba(15, 23, 42, 0.75)',
+  padding: '0.75rem 1rem',
+  color: '#e2e8f0',
+};
+
+const tooltipLabelStyle = {
+  color: '#f8fafc',
+  fontWeight: 600,
+  textTransform: 'capitalize',
+};
+
+const tooltipItemStyle = {
+  color: '#e2e8f0',
+};
+
 function processChartData(data: any[], config: ChartConfig) {
   let processedData = [...data];
 
@@ -155,11 +175,9 @@ export function Chart({ config, data, onDataClick }: ChartProps) {
             <XAxis dataKey={config.xAxis} stroke="#6b7280" />
             <YAxis stroke="#6b7280" />
             <Tooltip
-              contentStyle={{
-                backgroundColor: '#ffffff',
-                border: '1px solid #e5e7eb',
-                borderRadius: '0.5rem',
-              }}
+              contentStyle={tooltipContentStyle}
+              labelStyle={tooltipLabelStyle}
+              itemStyle={tooltipItemStyle}
             />
             <Legend />
             {yAxisFields.map((field, index) => (
@@ -181,11 +199,9 @@ export function Chart({ config, data, onDataClick }: ChartProps) {
             <XAxis dataKey={config.xAxis} stroke="#6b7280" />
             <YAxis stroke="#6b7280" />
             <Tooltip
-              contentStyle={{
-                backgroundColor: '#ffffff',
-                border: '1px solid #e5e7eb',
-                borderRadius: '0.5rem',
-              }}
+              contentStyle={tooltipContentStyle}
+              labelStyle={tooltipLabelStyle}
+              itemStyle={tooltipItemStyle}
             />
             <Legend />
             {yAxisFields.map((field, index) => (
@@ -210,11 +226,9 @@ export function Chart({ config, data, onDataClick }: ChartProps) {
             <XAxis dataKey={config.xAxis} stroke="#6b7280" />
             <YAxis stroke="#6b7280" />
             <Tooltip
-              contentStyle={{
-                backgroundColor: '#ffffff',
-                border: '1px solid #e5e7eb',
-                borderRadius: '0.5rem',
-              }}
+              contentStyle={tooltipContentStyle}
+              labelStyle={tooltipLabelStyle}
+              itemStyle={tooltipItemStyle}
             />
             <Legend />
             {yAxisFields.map((field, index) => (
@@ -237,11 +251,9 @@ export function Chart({ config, data, onDataClick }: ChartProps) {
             <XAxis dataKey={config.xAxis} stroke="#6b7280" />
             <YAxis dataKey={yAxisFields[0]} stroke="#6b7280" />
             <Tooltip
-              contentStyle={{
-                backgroundColor: '#ffffff',
-                border: '1px solid #e5e7eb',
-                borderRadius: '0.5rem',
-              }}
+              contentStyle={tooltipContentStyle}
+              labelStyle={tooltipLabelStyle}
+              itemStyle={tooltipItemStyle}
             />
             <Legend />
             <Scatter
@@ -286,11 +298,9 @@ export function Chart({ config, data, onDataClick }: ChartProps) {
               ))}
             </Pie>
             <Tooltip
-              contentStyle={{
-                backgroundColor: '#ffffff',
-                border: '1px solid #e5e7eb',
-                borderRadius: '0.5rem',
-              }}
+              contentStyle={tooltipContentStyle}
+              labelStyle={tooltipLabelStyle}
+              itemStyle={tooltipItemStyle}
             />
           </PieChart>
         );
@@ -324,11 +334,9 @@ export function Chart({ config, data, onDataClick }: ChartProps) {
             <XAxis dataKey="range" stroke="#6b7280" />
             <YAxis stroke="#6b7280" />
             <Tooltip
-              contentStyle={{
-                backgroundColor: '#ffffff',
-                border: '1px solid #e5e7eb',
-                borderRadius: '0.5rem',
-              }}
+              contentStyle={tooltipContentStyle}
+              labelStyle={tooltipLabelStyle}
+              itemStyle={tooltipItemStyle}
             />
             <Bar dataKey="count" fill={COLORS[0]} />
           </BarChart>
