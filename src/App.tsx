@@ -18,6 +18,7 @@ const LOADING_MESSAGES = [
   'Composing narrative-ready insights...',
   'Polishing your dashboard experience...',
 ];
+const MIN_PROCESSING_MS = 3000;
 
 function App() {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -43,6 +44,7 @@ function App() {
 
   const handleFileSelect = async (file: File) => {
     setIsProcessing(true);
+    const startTime = Date.now();
     try {
       const workbook = await parseExcelFile(file);
       const sheet = workbook.sheets[workbook.selectedSheet];
@@ -67,6 +69,10 @@ function App() {
       console.error('Error processing file:', error);
       alert('Failed to process file. Please ensure it is a valid Excel file.');
     } finally {
+      const elapsed = Date.now() - startTime;
+      if (elapsed < MIN_PROCESSING_MS) {
+        await new Promise(resolve => setTimeout(resolve, MIN_PROCESSING_MS - elapsed));
+      }
       setIsProcessing(false);
     }
   };
