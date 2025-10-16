@@ -46,39 +46,40 @@ export function Inspector({ chart, columns, onUpdate, onClose }: InspectorProps)
   const allDataColumns = [...categoricalColumns, ...dateColumns, ...numericColumns];
 
   return (
-    <div className="h-full bg-white border-l border-gray-200 overflow-y-auto">
-      <div className="p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-gray-900">Chart Settings</h2>
+    <div className="h-full overflow-hidden rounded-3xl border border-white/10 bg-white/10 backdrop-blur">
+      <div className="h-full overflow-y-auto px-6 py-6 text-slate-100">
+        <div className="mb-6 flex items-center justify-between">
+          <h2 className="text-lg font-semibold">Chart Settings</h2>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-gray-100 rounded transition-colors"
+            className="rounded-full border border-white/10 bg-white/5 p-1.5 text-slate-200 transition-colors hover:bg-white/10"
           >
-            <X className="w-5 h-5 text-gray-500" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         <div className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
               Chart Title
             </label>
             <input
               type="text"
               value={config.title}
               onChange={(e) => handleUpdate({ title: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-500/40"
+              placeholder="Give this chart a memorable name"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
               Chart Type
             </label>
             <select
               value={config.type}
               onChange={(e) => handleUpdate({ type: e.target.value as ChartType })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-500/40"
             >
               {chartTypes.map((type) => (
                 <option key={type.value} value={type.value}>
@@ -91,13 +92,13 @@ export function Inspector({ chart, columns, onUpdate, onClose }: InspectorProps)
           {config.type !== 'pie' && config.type !== 'histogram' && (
             <>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
                   X-Axis
                 </label>
                 <select
                   value={config.xAxis || ''}
                   onChange={(e) => handleUpdate({ xAxis: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-500/40"
                 >
                   <option value="">Select field...</option>
                   {allDataColumns.map((col) => (
@@ -109,13 +110,13 @@ export function Inspector({ chart, columns, onUpdate, onClose }: InspectorProps)
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
                   Y-Axis
                 </label>
                 <select
                   value={Array.isArray(config.yAxis) ? config.yAxis[0] : config.yAxis || ''}
                   onChange={(e) => handleUpdate({ yAxis: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-500/40"
                 >
                   <option value="">Select field...</option>
                   {numericColumns.map((col) => (
@@ -132,13 +133,13 @@ export function Inspector({ chart, columns, onUpdate, onClose }: InspectorProps)
             config.type === 'stacked-bar' ||
             config.type === '100-stacked-bar') && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
                 Aggregation
               </label>
               <select
                 value={config.aggregation || 'sum'}
                 onChange={(e) => handleUpdate({ aggregation: e.target.value as AggregationType })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-500/40"
               >
                 {aggregations.map((agg) => (
                   <option key={agg.value} value={agg.value}>
@@ -151,13 +152,13 @@ export function Inspector({ chart, columns, onUpdate, onClose }: InspectorProps)
 
           {config.type === 'pie' && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
                 Color By
               </label>
               <select
                 value={config.colorBy || ''}
                 onChange={(e) => handleUpdate({ colorBy: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-500/40"
               >
                 <option value="">Select field...</option>
                 {categoricalColumns.map((col) => (
@@ -171,13 +172,13 @@ export function Inspector({ chart, columns, onUpdate, onClose }: InspectorProps)
 
           {config.type === 'histogram' && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
                 Field
               </label>
               <select
                 value={config.xAxis || ''}
                 onChange={(e) => handleUpdate({ xAxis: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-500/40"
               >
                 <option value="">Select field...</option>
                 {numericColumns.map((col) => (
@@ -190,13 +191,13 @@ export function Inspector({ chart, columns, onUpdate, onClose }: InspectorProps)
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
               Sort By
             </label>
             <select
               value={config.sortBy || ''}
               onChange={(e) => handleUpdate({ sortBy: e.target.value || undefined })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-500/40"
             >
               <option value="">None</option>
               {allDataColumns.map((col) => (
@@ -209,7 +210,7 @@ export function Inspector({ chart, columns, onUpdate, onClose }: InspectorProps)
 
           {config.sortBy && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
                 Sort Order
               </label>
               <div className="flex gap-4">
@@ -219,7 +220,7 @@ export function Inspector({ chart, columns, onUpdate, onClose }: InspectorProps)
                     value="asc"
                     checked={config.sortOrder === 'asc'}
                     onChange={(e) => handleUpdate({ sortOrder: 'asc' })}
-                    className="mr-2"
+                    className="mr-2 accent-sky-500"
                   />
                   Ascending
                 </label>
@@ -229,7 +230,7 @@ export function Inspector({ chart, columns, onUpdate, onClose }: InspectorProps)
                     value="desc"
                     checked={config.sortOrder === 'desc'}
                     onChange={(e) => handleUpdate({ sortOrder: 'desc' })}
-                    className="mr-2"
+                    className="mr-2 accent-sky-500"
                   />
                   Descending
                 </label>
@@ -238,7 +239,7 @@ export function Inspector({ chart, columns, onUpdate, onClose }: InspectorProps)
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
               Limit to Top N
             </label>
             <input
@@ -247,7 +248,7 @@ export function Inspector({ chart, columns, onUpdate, onClose }: InspectorProps)
               onChange={(e) => handleUpdate({ topN: e.target.value ? parseInt(e.target.value) : undefined })}
               placeholder="All records"
               min="1"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-500/40"
             />
           </div>
 
@@ -258,9 +259,9 @@ export function Inspector({ chart, columns, onUpdate, onClose }: InspectorProps)
                   type="checkbox"
                   checked={config.stacked || false}
                   onChange={(e) => handleUpdate({ stacked: e.target.checked })}
-                  className="mr-2"
+                  className="mr-2 accent-sky-500"
                 />
-                <span className="text-sm font-medium text-gray-700">Enable Stacking</span>
+                <span className="text-sm font-medium text-slate-200">Enable Stacking</span>
               </label>
             </div>
           )}

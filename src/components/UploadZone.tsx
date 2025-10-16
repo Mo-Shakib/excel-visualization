@@ -37,58 +37,66 @@ export function UploadZone({ onFileSelect, isProcessing }: UploadZoneProps) {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-slate-50">
-      <div className="w-full max-w-2xl p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-3">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-950 text-slate-100">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-black" />
+        <div className="absolute -left-40 top-10 h-[28rem] w-[28rem] rounded-full bg-sky-500/20 blur-3xl" />
+        <div className="absolute -right-32 bottom-0 h-[28rem] w-[28rem] rounded-full bg-violet-500/25 blur-3xl" />
+      </div>
+
+      <div className="relative z-10 w-full max-w-3xl px-6 py-12">
+        <div className="rounded-3xl border border-white/10 bg-white/10 p-10 text-center shadow-2xl shadow-black/40 backdrop-blur">
+          <h1 className="text-4xl font-semibold tracking-tight text-white">
             Smart Excel Visualizer
           </h1>
-          <p className="text-lg text-gray-600">
-            Upload your Excel file and get instant, intelligent visualizations
+          <p className="mt-3 text-lg text-slate-300">
+            Drop your spreadsheet and watch insights come to life instantly.
           </p>
-        </div>
 
-        <div
-          onDrop={handleDrop}
-          onDragOver={(e) => e.preventDefault()}
-          className="border-3 border-dashed border-gray-300 rounded-2xl p-16 text-center hover:border-blue-400 hover:bg-blue-50/50 transition-all cursor-pointer bg-white shadow-sm"
-        >
-          <Upload className="w-16 h-16 mx-auto mb-6 text-gray-400" />
-          <p className="text-xl font-medium text-gray-700 mb-2">
-            Drop your Excel file here
-          </p>
-          <p className="text-gray-500 mb-6">or</p>
-
-          <label className="inline-block">
-            <input
-              type="file"
-              accept=".xlsx,.xls,.csv"
-              onChange={handleFileInput}
-              disabled={isProcessing}
-              className="hidden"
-            />
-            <span className="px-8 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors cursor-pointer inline-block">
-              {isProcessing ? 'Processing...' : 'Select File'}
+          <div
+            onDrop={handleDrop}
+            onDragOver={(e) => e.preventDefault()}
+            className="mt-10 flex flex-col items-center rounded-3xl border border-dashed border-white/20 bg-white/5 p-12 transition-all hover:border-sky-400/50 hover:bg-sky-500/10"
+          >
+            <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 via-blue-500 to-violet-500 text-white shadow-lg">
+              <Upload className="h-8 w-8" />
             </span>
-          </label>
+            <p className="mt-6 text-xl font-semibold text-white">
+              Drop your Excel file here
+            </p>
+            <p className="mt-2 text-sm text-slate-300">or choose a file from your device</p>
 
-          <p className="text-sm text-gray-500 mt-6">
-            Supports .xlsx, .xls, and .csv files up to 50MB
-          </p>
-        </div>
+            <label className="mt-6 inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white transition-all hover:border-sky-400/50 hover:bg-sky-500/20 cursor-pointer">
+              <input
+                type="file"
+                accept=".xlsx,.xls,.csv"
+                onChange={handleFileInput}
+                disabled={isProcessing}
+                className="hidden"
+              />
+              {isProcessing ? 'Processing...' : 'Select File'}
+            </label>
 
-        <div className="mt-12 grid grid-cols-3 gap-6 text-center">
-          <div>
-            <div className="text-3xl font-bold text-blue-600 mb-2">01</div>
-            <p className="text-sm text-gray-600">Auto-detect data types</p>
+            <p className="mt-4 text-xs uppercase tracking-[0.35em] text-slate-400">
+              Supports .xlsx · .xls · .csv up to 50MB
+            </p>
           </div>
-          <div>
-            <div className="text-3xl font-bold text-blue-600 mb-2">02</div>
-            <p className="text-sm text-gray-600">Generate smart charts</p>
-          </div>
-          <div>
-            <div className="text-3xl font-bold text-blue-600 mb-2">03</div>
-            <p className="text-sm text-gray-600">Refine & export</p>
+
+          <div className="mt-12 grid gap-4 text-left sm:grid-cols-3">
+            {[
+              { number: '01', headline: 'Auto profiling', description: 'We classify columns and highlight data health instantly.' },
+              { number: '02', headline: 'Smart visuals', description: 'Recommended charts appear tailored to your dataset.' },
+              { number: '03', headline: 'Refine & export', description: 'Fine-tune visuals, overlay insights, and share in seconds.' },
+            ].map((item) => (
+              <div
+                key={item.number}
+                className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur"
+              >
+                <p className="text-2xl font-semibold text-white">{item.number}</p>
+                <h3 className="mt-3 text-sm font-semibold text-white">{item.headline}</h3>
+                <p className="mt-2 text-xs text-slate-300">{item.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
