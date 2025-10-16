@@ -101,13 +101,43 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
       });
     }
 
+    const MAX_CHART_POINTS = 200;
+    let chartLabels = labels;
+    let chartDatasets = datasets;
+    let chartTruncated = false;
+
+    if (labels.length > MAX_CHART_POINTS) {
+      chartTruncated = true;
+      const step = (labels.length - 1) / (MAX_CHART_POINTS - 1);
+      const orderedIndices = [];
+
+      for (let i = 0; i < MAX_CHART_POINTS; i += 1) {
+        const index = Math.min(Math.round(i * step), labels.length - 1);
+        if (!orderedIndices.length || orderedIndices[orderedIndices.length - 1] !== index) {
+          orderedIndices.push(index);
+        }
+      }
+
+      if (orderedIndices[orderedIndices.length - 1] !== labels.length - 1) {
+        orderedIndices.push(labels.length - 1);
+      }
+
+      chartLabels = orderedIndices.map((index) => labels[index]);
+      chartDatasets = datasets.map((dataset) => ({
+        label: dataset.label,
+        data: orderedIndices.map((index) => dataset.data[index]),
+      }));
+    }
+
     return res.json({
       sheetName: firstSheetName,
       headers,
       rows: dataRows,
       chart: {
-        labels,
-        datasets,
+        labels: chartLabels,
+        datasets: chartDatasets,
+        truncated: chartTruncated,
+        originalPointCount: labels.length,
       },
     });
   } catch (error) {

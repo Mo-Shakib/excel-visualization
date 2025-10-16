@@ -4,6 +4,7 @@ const statusElement = document.getElementById('status');
 const chartSection = document.getElementById('chart-section');
 const tableSection = document.getElementById('table-section');
 const tableElement = document.getElementById('data-table');
+const chartNote = document.getElementById('chart-note');
 
 let chartInstance = null;
 
@@ -12,6 +13,8 @@ function resetView() {
   chartSection.hidden = true;
   tableSection.hidden = true;
   tableElement.innerHTML = '';
+  chartNote.hidden = true;
+  chartNote.textContent = '';
 
   if (chartInstance) {
     chartInstance.destroy();
@@ -45,7 +48,8 @@ function renderTable(headers, rows) {
   tableSection.hidden = false;
 }
 
-function renderChart(labels, datasets) {
+function renderChart(chart) {
+  const { labels, datasets, truncated, originalPointCount } = chart;
   const canvas = document.getElementById('chart');
   const palette = [
     '#4F46E5',
@@ -88,6 +92,14 @@ function renderChart(labels, datasets) {
   });
 
   chartSection.hidden = false;
+
+  if (truncated) {
+    chartNote.hidden = false;
+    chartNote.textContent = `Showing ${labels.length} of ${originalPointCount} rows for the preview chart.`;
+  } else {
+    chartNote.hidden = true;
+    chartNote.textContent = '';
+  }
 }
 
 form.addEventListener('submit', async (event) => {
@@ -117,7 +129,7 @@ form.addEventListener('submit', async (event) => {
     }
 
     statusElement.textContent = '';
-    renderChart(payload.chart.labels, payload.chart.datasets);
+    renderChart(payload.chart);
     renderTable(payload.headers, payload.rows);
   } catch (error) {
     statusElement.textContent = error.message;
